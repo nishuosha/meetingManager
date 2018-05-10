@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+    	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   		xmlns:context="http://www.springframework.org/schema/context"
+   		xmlns:aop="http://www.springframework.org/schema/aop"
+    	xmlns:tx="http://www.springframework.org/schema/tx"
+    	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    						http://www.springframework.org/schema/beans/spring-beans.xsd
+    						http://www.springframework.org/schema/aop 
+    						http://www.springframework.org/schema/aop/spring-aop.xsd
+    						http://www.springframework.org/schema/context
+    						http://www.springframework.org/schema/context/spring-context.xsd
+    						http://www.springframework.org/schema/tx
+    						http://www.springframework.org/schema/tx/spring-tx.xsd">
+<!--     spring配置文件	 -->
+<!--     组件扫描 -->
+	<context:component-scan base-package="com.meet.service"></context:component-scan>
+	<context:component-scan base-package="com.meet.dao"></context:component-scan>	
+	<context:component-scan base-package="com.meet.action"></context:component-scan>
+<!-- 	开启注解 -->
+	<context:annotation-config />
+	
+<!-- 	配置dataSource，由c3p0连接池提供 
+			property中是一些数据库的相关配置
+-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/meetingmanager"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="1234"></property>
+		
+	</bean>	
+	
+<!-- 	配置Hibernate5的sessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+<!-- 		映射文件扫描的包 -->
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:com/meet/base</value>
+			</list>
+		</property>
+		
+	</bean>
+	
+<!-- 	配置UserDaoInterfaceImpl，以供注入使用 -->
+	<bean id="userDao" class="com.meet.dao.UserDaoInterfaceImpl" >
+<!-- 		需要注入sessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+<!-- 	配置MeetingDaoInterfaceImpl -->
+	<bean id="meetingDao" class="com.meet.dao.MeetingDaoInterfaceImpl">
+<!-- 	需要注入sessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="userService" class="com.meet.service.UserServiceInterfaceImpl" >
+		
+	</bean>
+	
+<!-- 	配置Hibernate5的事务管理器
+ -->
+	<bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+<!-- 	需要注入sessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+<!-- 	配置通知，即要添加事务的方法 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="find*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="get*" propagation="REQUIRED" read-only="false"  />
+			<tx:method name="save*" propagation="REQUIRED"  read-only="false" />
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" />
+		</tx:attributes>
+	</tx:advice>
+	
+<!-- 	aop配置 -->
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice" pointcut="execution(* com.meet.service.*.*(..))"/>
+	</aop:config>	
+	
+	
+		
+</beans>

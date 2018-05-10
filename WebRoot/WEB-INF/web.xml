@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>MeetingManager</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>jsppage/start.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  
+  <servlet>
+  	<servlet-name>wxServlet</servlet-name>
+  	<servlet-class>com.meet.servlet.WxServlet</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+  	<servlet-name>codeServlet</servlet-name>
+  	<servlet-class>com.meet.servlet.codeServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>wxLoginServlet</servlet-name>
+  	<servlet-class>com.meet.servlet.WxLoginServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>wxServlet</servlet-name>
+  	<url-pattern>/wxServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>codeServlet</servlet-name>
+  	<url-pattern>/codeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>wxLoginServlet</servlet-name>
+  	<url-pattern>/wxLoginServlet</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+<!--   配置struts2的过滤器 -->
+  <filter>
+  	<filter-name>struts2</filter-name>
+  	<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>struts2</filter-name>
+	<url-pattern>*.action</url-pattern>  	
+	<dispatcher>REQUEST</dispatcher>
+  	<dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+  
+  <filter-mapping>
+  	<filter-name>struts2</filter-name>
+  	<url-pattern>*.jsp</url-pattern>
+  </filter-mapping>
+<!--   配置解决乱码的过滤器 -->
+  <filter>
+  	<filter-name>characterEncodingFilter</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>UTF-8</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>characterEncodingFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+    <!-- 解决Hibernate延迟加载问题 -->
+  
+    <!-- 指定spring配置文件的位置 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+<!--   配置监听器，加载spring配置文件 -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+</web-app>

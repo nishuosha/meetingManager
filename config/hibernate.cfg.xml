@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<!-- 仅供测试使用，其中内容已经集成至spring配置文件 -->
+
+<hibernate-configuration>
+<session-factory>
+	<property name="hibernate.connection.driver_class">
+		com.mysql.jdbc.Driver
+	</property>
+	<property name="hibernate.connection.username">root</property>
+	<property name="hibernate.connection.password">1234</property>
+	<property name="hibernate.connection.url">
+		jdbc:mysql://localhost:3306/meetingmanager
+	</property>
+
+	<!-- 操作数据库时，会想console打印sql 语句 -->
+	<property name="show_sql">true</property>
+	<!-- 打印sql语句时，将sql 格式化 -->
+	<!--	是否自动生成表结构 -->
+	<property name="hbm2ddl.auto">update</property>
+	<!--	事务自动提交 -->
+	<property name="connection.autocommit">true</property>
+
+	<property name="hibernate.dialect">
+		org.hibernate.dialect.MySQLDialect
+	</property>
+
+	
+	
+	<mapping resource="com/meet/base/Meeting.hbm.xml" />
+	<mapping resource="com/meet/base/User.hbm.xml" />
+
+
+</session-factory>
+</hibernate-configuration>

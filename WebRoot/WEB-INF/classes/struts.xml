@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<!--     struts配置文件,每个action在具体的实现代码中都有注释 -->
+    <struts>
+
+<!--     	开发模式，便于调试 -->
+    	<constant name="struts.devMode" value="true"></constant>
+<!--     	bean工厂，spring提供 -->
+    	<constant name="struts.objectFactory" value="spring"></constant>
+    	
+<!--     	测试package -->
+    	<package  name="test" extends="struts-default" namespace="/">
+    		<action name="test" class="com.meet.action.ActionTest" method="test">
+				<result name="success">/jsppage/left.jsp</result>    			
+    		</action>
+    	</package>
+    	
+<!--     	用户相关操作package -->
+    	<package name="user" extends="struts-default" namespace="/user">
+    		
+    		
+<!--     		拦截器，拦截未登录用户 -->
+    		<interceptors>
+    			<interceptor name="loginInterceptor" class="com.meet.filter.LoginFilter">
+<!--     			不用拦截的方法 -->
+    				<param name="excludeMethods">login,register,code,valiCode,valiUserName,checkLogin</param>
+    			</interceptor>
+    			<interceptor-stack name="myDefault">
+    				<interceptor-ref name="defaultStack"></interceptor-ref>
+    				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+    			</interceptor-stack>
+    		</interceptors>
+    		
+<!--     		默认拦截器配置 -->
+    		<default-interceptor-ref name="myDefault"></default-interceptor-ref>
+    		
+<!--     		全局结果视图 -->
+    		<global-results>
+    			<result name="login" type="redirect">/jsppage/stlogin.jsp
+    			</result>
+    		</global-results>
+					
+<!-- 			生成验证码	  		 -->
+    		<action name="code" class="com.meet.action.UserAction" method="code">
+    			
+    		</action>
+<!--     		验证码校验 -->
+    		<action name="valiCode" class="com.meet.action.UserAction" method="valiCode">
+    		
+    		</action>
+<!--     		校验用户名是否存在 -->
+    		<action name="valiUserName" class="com.meet.action.UserAction" method="valiUserName">
+    			
+    		</action>
+<!--     		注册 -->
+    		<action name="register" class="com.meet.action.UserAction" method="register">
+    			<result name="success" type="redirect">/jsppage/stlogin.jsp</result>
+    			<result name="input">/jsppage/stregist.jsp</result>
+    		</action>
+<!--     		登录 -->
+    		<action name="login" class="com.meet.action.UserAction" method="login">
+    			<result name="success" type="redirect">/jsppage/Mframe.jsp</result>
+    			<result name="input">/jsppage/stlogin.jsp</result>
+    		</action>
+<!--     		获取当前用户预定的会议 -->
+    		<action name="getMyReserve" class="com.meet.action.UserAction" method="getMyReserve">
+    			<result name="success">/jsppage/mybookings.jsp</result>
+    		</action>
+<!--     		获取当前用户参与的会议 -->
+    		<action name="getMyParticipate" class="com.meet.action.UserAction" method="getMyParticipate">
+    			<result name="success">/jsppage/mymeetings.jsp</result>
+    		</action>
+<!--     		获取系统所有用户 -->
+    		<action name="getAllUser" class="com.meet.action.UserAction" method="getAllUser">
+    			<result name="success">/jsppage/searchemployees.jsp</result>
+    		</action>
+<!--     		查找用户 -->
+    		<action name="searchUser" class="com.meet.action.UserAction" method="searchUser">
+    			<result name="success">/jsppage/searchemployees.jsp</result>
+    		</action>
+    		<action name="getNewMeeting" class="com.meet.action.UserAction" method="getNewMeeting">
+    			<result name="success">/jsppage/notifications.jsp</result>
+    		</action>
+    		
+    		<action name="markTime" class="com.meet.action.UserAction" method="markTime" >
+    			<result name="success" type="redirectAction">getMyReserve</result>
+    		</action>
+    		
+    		<action name="exit" class="com.meet.action.UserAction" method="exit" >
+    		</action>
+    		
+    		<action name="valiPwd" class="com.meet.action.UserAction" method="valiPwd" >
+    			
+    		</action>
+    		<action name="changePwd" class="com.meet.action.UserAction" method="changePwd">
+    			<result name="success" type="redirectAction">getMyReserve</result>
+    		</action>
+    		
+    		<action name="userInfo" class="com.meet.action.UserAction" method="userInfo" >
+    			<result name="success">/jsppage/userinfo.jsp</result>
+    		</action>
+    		
+    		<action name="checkLogin" class="com.meet.action.UserAction" method="checkLogin" >
+    			
+    		</action>
+    	</package>
+    	
+<!--     	会议相关操作package -->
+    	<package name="meeting" extends="struts-default" namespace="/meeting">
+<!--     	添加会议 -->
+    		<action name="addMeeting" class="com.meet.action.MeetingAction" method="addMeeting">
+    			<result name="success" type="redirectAction">
+    				<param name="namespace">/user</param>
+    				<param name="actionName">getMyReserve</param>
+    			</result>	
+    		</action>
+<!--     		前往预定会议页面 -->
+    		<action name="toBookMeeting" class="com.meet.action.MeetingAction" method="toBookMeeting">
+    			<result name="success">/jsppage/bookmeeting.jsp</result>
+    		</action>
+<!--     		前往预定会议详情页面 -->
+    		<action name="toReserveDetail" class="com.meet.action.MeetingAction" method="getReserveDetail">
+    			<result name="success">/jsppage/mymeetingdetails.jsp</result>
+    		</action>
+<!--     		前往参与会议详情页面 -->
+    		<action name="toParticipateDetail" class="com.meet.action.MeetingAction" method="getParticipateDetail">
+    			<result name="success">/jsppage/meetingdetails.jsp</result>
+    		</action>
+<!--     		前往会议撤销界面 -->
+    		<action name="todeleteMeeting" class="com.meet.action.MeetingAction" method="todeleteMeeting" >
+    			<result name="success">/jsppage/cancelmeeting.jsp</result>
+    		</action>
+<!--     		撤销会议 -->
+    		<action name="deleteMeeting" class="com.meet.action.MeetingAction" method="deleteMeeting" >
+    			<result name="success" type="redirectAction">
+    				<param name="namespace">/user</param>
+    				<param name="actionName">getMyReserve</param>
+    			</result>
+    		</action>
+<!--     		前往所有会议页面 -->
+    		<action name="toSearchMeeting" class="com.meet.action.MeetingAction" method="toSearchMeeting">
+    			<result name="success">/jsppage/searchmeetings.jsp</result>
+    		</action>
+    		
+    		<action name="getAllTime" class="com.meet.action.MeetingAction" method="getAllTime">
+    			<result name="success">/jsppage/time.jsp</result>
+    		</action>
+    		
+    		<action name="checkTime" class="com.meet.action.MeetingAction" method="checkTime">
+    		</action>
+    		
+    	</package>
+    	
+<!--     	微信package -->
+    	<package name="wechat" extends="struts-default" namespace="/wechat">    		
+    	
+    		<action name="getQrcode" class="com.meet.action.WeChatAction" method="getQrcode" >
+    		</action>
+    	</package>
+    	
+    </struts>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    	
+    	<class name="com.meet.base.Meeting" table="meeting">
+    		<id name="MeetingID" column="MeetingID">
+    			<generator class="native"></generator>
+    		</id>
+    		
+    		<property name="MeetingName" column="MeetingName"></property>
+    		<property name="ReserationTime" column="ReserationTime"></property>
+    		<property name="Description" column="Description"></property>
+    		<property name="participatenum" column="participatenum"></property>
+    		<property name="effect" column="effect"></property>
+    		
+    		<many-to-one name="subscriber" class="com.meet.base.User" column="subscriber" lazy="false"></many-to-one>
+    		
+    		<set name="participants" table="meet_participate" lazy="false">
+    			<key column="meetingId"></key>
+    			<many-to-many class="com.meet.base.User" column="participaterId" ></many-to-many>
+    		</set>
+    		
+    		<set name="meetDates" lazy="false">
+    			<key column="meetingId"></key>
+    			<one-to-many class="com.meet.base.MeetDate"  />
+    		</set>
+    		
+    		<set name="status" lazy="false">
+    			<key column="meetingid"></key>
+    			<one-to-many class="com.meet.base.MeetStatus"/>
+    		</set>
+    	</class>
+    	
+    </hibernate-mapping>

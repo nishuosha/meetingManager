@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    	<class name="com.meet.base.MeetStatus" table="meet_status">
+    		<id name="id" column="id">
+    			<generator class="native"></generator>
+    		</id>
+    		
+    		<property name="status" column="status"></property>
+    		
+    		<many-to-one name="meeting" class="com.meet.base.Meeting" column="MeetingID" lazy="false"></many-to-one>
+    		
+    		<set name="users" table="user_status" lazy="false">
+    			<key column="meet_status_id"></key>
+    			<many-to-many class="com.meet.base.User" column="userid" lazy="false"></many-to-many>
+    		</set>
+    		
+    	</class>
+    </hibernate-mapping>

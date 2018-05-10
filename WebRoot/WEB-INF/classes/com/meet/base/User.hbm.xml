@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    	
+    	<class name="com.meet.base.User" table="user">
+    		<id name="UserID" column="UserID">
+				<generator class="native"></generator>    				
+    		</id>
+    		
+    		<property name="UserName" column="UserName"></property>
+    		<property name="UserPwd" column="UserPwd"></property>
+    		<property name="Name" column="Name"></property>
+    		<property name="email" column="Email"></property>
+    		<property name="status" column="status"></property>
+    		<property name="DecisionTime" column="DecisionTime"></property>
+    		<property name="invitation" column="invitation"></property>
+    		<property name="Sign" column="Sign"></property>
+    		<property name="phone" column="phone"></property>
+    		<property name="openid" column="openid"></property>
+    		<property name="login" column="login"></property>
+    		
+		    <set name="meeting_reserve" lazy="false">
+		    	<key column="subscriber"></key>
+		    	<one-to-many class="com.meet.base.Meeting"/>
+		    </set>	
+		    
+		    <set name="meeting_participate" table="meet_participate" lazy="false">
+		    	<key column="participaterId"></key>
+		    	<many-to-many class="com.meet.base.Meeting" column="meetingId"></many-to-many>
+		    </set>
+		    
+		    <set name="dates" table="user_time" lazy="false">
+		    	<key column="UserID"></key>
+		    	<many-to-many class="com.meet.base.MeetDate" column="id"></many-to-many>
+		    </set>
+		    
+		    <set name="meetStatus" table="user_status" lazy="false">
+		    	<key column="userid"></key>
+		    	<many-to-many class="com.meet.base.MeetStatus" column="meet_status_id"></many-to-many>
+		    </set>
+		    		
+    	</class>
+    	
+    </hibernate-mapping>
